@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:movie_app/network/models/cast_model/casts_model.dart';
 import 'package:movie_app/network/models/movies_model.dart';
 import 'package:retrofit/retrofit.dart';
 
@@ -17,4 +18,7 @@ abstract class ApiService {
   @GET("movie/{paramType}")
   Future<MoviesModel> getMovieList(
       @Path() String paramType, @Query("api_key") String apiKey);
+
+  @GET("person/popular")
+  Future<CastsModel> getCastList(@Query("api_key") String apiKey);
 }

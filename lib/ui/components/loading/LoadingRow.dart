@@ -23,3 +23,33 @@ class LoadingRow extends StatelessWidget {
     );
   }
 }
+
+class LoadingRowCast extends StatelessWidget {
+  const LoadingRowCast({
+    Key key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      height: 60,
+      width: double.infinity,
+      child: ListView(
+        scrollDirection: Axis.horizontal,
+        physics: BouncingScrollPhysics(),
+        children: [
+          LoadingCast(),
+          LoadingCast(),
+          LoadingCast(),
+          LoadingCast(),
+          LoadingCast(),
+          LoadingCast(),
+          LoadingCast(),
+          LoadingCast(),
+          LoadingCast(),
+          LoadingCast(),
+        ],
+      ),
+    );
+  }
+}

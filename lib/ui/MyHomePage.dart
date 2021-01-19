@@ -5,13 +5,10 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:movie_app/content/demo_data.dart';
 import 'package:movie_app/network/models/bloc/movies_bloc.dart';
 import 'package:movie_app/ui/components/MovieRow.dart';
-import 'package:movie_app/ui/components/loading/LoadingCard.dart';
 import 'package:movie_app/ui/components/loading/LoadingRow.dart';
-import 'package:shimmer/shimmer.dart';
 import 'components/CarouselImageCard.dart';
 import 'components/Drawer.dart';
 import 'components/CastRowList.dart';
-import 'components/MovieCard.dart';
 import 'components/SliderHeader.dart';
 
 class MyHomePage extends StatefulWidget {
@@ -74,9 +71,13 @@ class _MyHomePageState extends State<MyHomePage> {
                           viewportFraction: 0.9,
                           aspectRatio: 2.0,
                         ),
-                        items: imgList
+                        items: carouselItems
                             .map(
-                              (item) => Center(child: CarouselImageCard(item)),
+                              (item) => Center(
+                                  child: CarouselImageCard(
+                                img: item['img'],
+                                name: item['name'],
+                              )),
                             )
                             .toList(),
                       ),

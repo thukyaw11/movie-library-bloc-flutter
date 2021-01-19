@@ -25,3 +25,24 @@ class LoadingCard extends StatelessWidget {
     );
   }
 }
+
+class LoadingCast extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      margin: EdgeInsets.symmetric(horizontal: 10),
+      width: 60.0,
+      height: 60.0,
+      decoration: BoxDecoration(borderRadius: BorderRadius.circular(500)),
+      child: Shimmer.fromColors(
+          baseColor: Colors.black,
+          highlightColor: Colors.white38,
+          child: Container(
+            height: 60,
+            width: 60,
+            decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(500), color: Colors.white),
+          )),
+    );
+  }
+}

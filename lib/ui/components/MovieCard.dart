@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:movie_app/network/models/movie_model.dart';
@@ -18,8 +19,11 @@ class MovieCard extends StatelessWidget {
       children: [
         InkWell(
           onTap: () {
-            Navigator.push(context,
-                MaterialPageRoute(builder: (context) => MovieDetail()));
+            Navigator.push(
+                context,
+                CupertinoPageRoute(
+                    builder: (context) =>
+                        MovieDetail(id: moviesModel[index].id)));
           },
           child: Container(
             height: 170,
@@ -30,7 +34,7 @@ class MovieCard extends StatelessWidget {
               child: CachedNetworkImage(
                 fit: BoxFit.fill,
                 imageUrl:
-                    "https://image.tmdb.org/t/p/original${moviesModel[index].backdropPath}",
+                    "https://image.tmdb.org/t/p/original${moviesModel[index].posterPath}",
                 progressIndicatorBuilder: (context, url, downloadProgress) {
                   return Center(
                     child: CircularProgressIndicator(

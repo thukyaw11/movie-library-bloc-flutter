@@ -2,8 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:movie_app/content/demo_data.dart';
-import 'package:movie_app/network/models/bloc/cast_bloc.dart';
+import 'package:movie_app/network/models/bloc/casts/cast_bloc.dart';
 import 'package:movie_app/ui/components/loading/LoadingRow.dart';
 
 class CastRowList extends StatelessWidget {

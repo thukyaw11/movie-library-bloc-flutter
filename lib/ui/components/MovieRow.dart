@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:movie_app/network/models/movies_model.dart';
+import 'package:movie_app/network/models/movie_model/movies_model.dart';
 import 'package:movie_app/ui/components/MovieCard.dart';
 
 class MovieRowList extends StatelessWidget {

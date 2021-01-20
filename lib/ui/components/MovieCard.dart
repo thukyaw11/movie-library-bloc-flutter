@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:movie_app/network/models/movie_model.dart';
+import 'package:movie_app/network/models/movie_model/movie_model.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:movie_app/ui/pages/MovieDetail.dart';
 

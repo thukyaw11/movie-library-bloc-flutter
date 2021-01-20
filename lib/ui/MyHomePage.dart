@@ -3,7 +3,7 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:movie_app/content/demo_data.dart';
-import 'package:movie_app/network/models/bloc/movies_bloc.dart';
+import 'package:movie_app/network/models/bloc/movies/movies_bloc.dart';
 import 'package:movie_app/ui/components/MovieRow.dart';
 import 'package:movie_app/ui/components/loading/LoadingRow.dart';
 import 'components/CarouselImageCard.dart';

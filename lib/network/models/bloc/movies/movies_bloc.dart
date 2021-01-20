@@ -3,7 +3,7 @@ import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:movie_app/network/api_service.dart';
-import 'package:movie_app/network/models/movies_model.dart';
+import 'package:movie_app/network/models/movie_model/movies_model.dart';
 
 part 'movies_event.dart';
 part 'movies_state.dart';

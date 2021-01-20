@@ -10,10 +10,11 @@ MovieDetail _$MovieDetailFromJson(Map<String, dynamic> json) {
   return MovieDetail(
     adult: json['adult'] as bool,
     backdropPath: json['backdrop_path'] as String,
-    budget: json['budget'] as String,
-    genres: json['genres'] == null
-        ? null
-        : Genres.fromJson(json['genres'] as Map<String, dynamic>),
+    budget: json['budget'] as int,
+    genres: (json['genres'] as List)
+        ?.map((e) =>
+            e == null ? null : Genres.fromJson(e as Map<String, dynamic>))
+        ?.toList(),
     homepage: json['homepage'] as String,
     id: json['id'] as int,
     originalLang: json['original_language'] as String,
@@ -21,27 +22,28 @@ MovieDetail _$MovieDetailFromJson(Map<String, dynamic> json) {
     overview: json['overview'] as String,
     popularity: (json['popularity'] as num)?.toDouble(),
     posterPath: json['poster_path'] as String,
-    companies: json['production_companies'] == null
-        ? null
-        : ProductionCompanies.fromJson(
-            json['production_companies'] as Map<String, dynamic>),
-    countries: json['production_countries'] == null
-        ? null
-        : ProductionCountries.fromJson(
-            json['production_countries'] as Map<String, dynamic>),
+    companies: (json['production_companies'] as List)
+        ?.map((e) => e == null
+            ? null
+            : ProductionCompanies.fromJson(e as Map<String, dynamic>))
+        ?.toList(),
+    countries: (json['production_countries'] as List)
+        ?.map((e) => e == null
+            ? null
+            : ProductionCountries.fromJson(e as Map<String, dynamic>))
+        ?.toList(),
     releaseDate: json['release_date'] as String,
-    revenue: json['revenue'] == null
-        ? null
-        : BigInt.parse(json['revenue'] as String),
+    revenue: json['revenue'] as int,
     runtime: json['runtime'] as int,
-    spokenLang: json['spoken_languages'] == null
-        ? null
-        : SpokenLang.fromJson(json['spoken_languages'] as Map<String, dynamic>),
+    spokenLang: (json['spoken_languages'] as List)
+        ?.map((e) =>
+            e == null ? null : SpokenLang.fromJson(e as Map<String, dynamic>))
+        ?.toList(),
     status: json['status'] as String,
     tagline: json['tagline'] as String,
     title: json['title'] as String,
     voteAvg: (json['vote_average'] as num)?.toDouble(),
-    voteCount: json['voue_count'] as int,
+    voteCount: json['vote_count'] as int,
   );
 }
 
@@ -61,14 +63,14 @@ Map<String, dynamic> _$MovieDetailToJson(MovieDetail instance) =>
       'production_companies': instance.companies,
       'production_countries': instance.countries,
       'release_date': instance.releaseDate,
-      'revenue': instance.revenue?.toString(),
+      'revenue': instance.revenue,
       'runtime': instance.runtime,
       'spoken_languages': instance.spokenLang,
       'status': instance.status,
       'tagline': instance.tagline,
       'title': instance.title,
       'vote_average': instance.voteAvg,
-      'voue_count': instance.voteCount,
+      'vote_count': instance.voteCount,
     };
 
 Genres _$GenresFromJson(Map<String, dynamic> json) {

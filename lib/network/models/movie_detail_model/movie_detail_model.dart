@@ -7,8 +7,8 @@ class MovieDetail {
   bool adult;
   @JsonKey(name: 'backdrop_path')
   String backdropPath;
-  String budget;
-  Genres genres;
+  int budget;
+  List<Genres> genres;
   String homepage;
   int id;
   @JsonKey(name: 'original_language')
@@ -20,21 +20,21 @@ class MovieDetail {
   @JsonKey(name: 'poster_path')
   String posterPath;
   @JsonKey(name: 'production_companies')
-  ProductionCompanies companies;
+  List<ProductionCompanies> companies;
   @JsonKey(name: "production_countries")
-  ProductionCountries countries;
+  List<ProductionCountries> countries;
   @JsonKey(name: "release_date")
   String releaseDate;
-  BigInt revenue;
+  int revenue;
   int runtime;
   @JsonKey(name: 'spoken_languages')
-  SpokenLang spokenLang;
+  List<SpokenLang> spokenLang;
   String status;
   String tagline;
   String title;
   @JsonKey(name: 'vote_average')
   double voteAvg;
-  @JsonKey(name: 'voue_count')
+  @JsonKey(name: 'vote_count')
   int voteCount;
 
   MovieDetail(

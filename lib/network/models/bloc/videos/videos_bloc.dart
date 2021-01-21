@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:io';
 
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
@@ -16,6 +17,22 @@ class VideosBloc extends Bloc<VideosEvent, VideosState> {
   Stream<VideosState> mapEventToState(
     VideosEvent event,
   ) async* {
-    // TODO: implement mapEventToState
+    if (event is FetchVideosEvent) {
+      yield VideosLoadingState();
+
+      try {
+        final response = await api.getVideosList(event.movieId, apiKey);
+
+        if (response.results.isEmpty) {
+          yield VideosEmptyState();
+        } else {
+          yield VideosLoadedState(videosModel: response);
+        }
+      } on Exception {
+        yield VideosErrorState();
+      } on SocketException {
+        yield VideosErrorState();
+      }
+    }
   }
 }

@@ -5,33 +5,37 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:movie_app/network/models/bloc/movie_detail/movie_detail_bloc.dart';
 import 'package:movie_app/network/models/bloc/movie_detail_casts/movie_detail_casts_bloc.dart';
+import 'package:movie_app/network/models/bloc/videos/videos_bloc.dart';
 import 'package:movie_app/ui/MyHomePage.dart';
 import 'package:movie_app/ui/components/InfoBar.dart';
 import 'package:movie_app/ui/components/MovieDetailHeading.dart';
 import 'package:movie_app/ui/components/Rating.dart';
 import 'package:movie_app/ui/components/SimilarMoviesList.dart';
 import 'package:movie_app/ui/components/loading/LoadingRow.dart';
+import 'package:movie_app/ui/pages/VideoTrailer.dart';
 
-class MovieDetail extends StatelessWidget {
+class MovieDetail extends StatefulWidget {
   final int id;
-
   MovieDetail({this.id});
+
+  @override
+  _MovieDetailState createState() => _MovieDetailState(id);
+}
+
+class _MovieDetailState extends State<MovieDetail> {
+  final int id;
+  _MovieDetailState(this.id);
 
   @override
   Widget build(BuildContext context) {
     final _topRateBloc = BlocProvider.of<MovieDetailBloc>(context);
     final movieDetailCast = BlocProvider.of<MovieDetailCastsBloc>(context);
+    final videoTrailerBloc = BlocProvider.of<VideosBloc>(context);
     _topRateBloc..add(FetchMovieDetailEvent(movieId: id));
     movieDetailCast..add(FetchMovieDetailCastsEvent(movieId: id));
+    videoTrailerBloc.add(FetchVideosEvent(movieId: id));
     return Scaffold(
         backgroundColor: Colors.black,
-        floatingActionButton: FloatingActionButton(
-          child: Icon(
-            Icons.play_arrow,
-            color: Colors.black,
-          ),
-          backgroundColor: Colors.yellow,
-        ),
         body: BlocBuilder<MovieDetailBloc, MovieDetailState>(
             builder: (context, state) {
           if (state is MovieDetailLoadingState) {
@@ -186,24 +190,77 @@ class MovieDetail extends StatelessWidget {
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Column(
-                            children: [
-                              IconButton(
-                                icon: Icon(
-                                  Icons.video_library,
-                                  color: Colors.white,
-                                  size: 30,
-                                ),
-                              ),
-                              Text(
-                                "Trailer",
-                                style: GoogleFonts.lato(
-                                  textStyle: TextStyle(
-                                      color: Colors.white, fontSize: 12),
-                                ),
-                              ),
-                            ],
-                          ),
+                          BlocBuilder<VideosBloc, VideosState>(
+                              builder: (context, state) {
+                            if (state is VideosLoadingState) {
+                              Column(
+                                children: [
+                                  CircularProgressIndicator(
+                                    backgroundColor: Colors.grey,
+                                  ),
+                                  Text(
+                                    "Trailer",
+                                    style: GoogleFonts.lato(
+                                      textStyle: TextStyle(
+                                          color: Colors.white, fontSize: 12),
+                                    ),
+                                  ),
+                                ],
+                              );
+                            }
+                            if (state is VideosLoadedState) {
+                              return Column(
+                                children: [
+                                  IconButton(
+                                    onPressed: () {
+                                      Navigator.push(
+                                          context,
+                                          CupertinoPageRoute(
+                                              builder: (context) =>
+                                                  VideoTrailer(
+                                                      youtubeKeys: state
+                                                          .videosModel
+                                                          .results)));
+                                    },
+                                    icon: Icon(
+                                      Icons.video_library,
+                                      color: Colors.white,
+                                      size: 30,
+                                    ),
+                                  ),
+                                  Text(
+                                    "Trailer",
+                                    style: GoogleFonts.lato(
+                                      textStyle: TextStyle(
+                                          color: Colors.white, fontSize: 12),
+                                    ),
+                                  ),
+                                ],
+                              );
+                            }
+
+                            if (state is VideosEmptyState) {
+                              return Column(
+                                children: [
+                                  IconButton(
+                                    icon: Icon(
+                                      Icons.video_library,
+                                      color: Colors.red,
+                                      size: 30,
+                                    ),
+                                  ),
+                                  Text(
+                                    "No Trailer",
+                                    style: GoogleFonts.lato(
+                                      textStyle: TextStyle(
+                                          color: Colors.white, fontSize: 12),
+                                    ),
+                                  ),
+                                ],
+                              );
+                            }
+                            return Text("hello world");
+                          }),
                           Column(
                             children: [
                               IconButton(

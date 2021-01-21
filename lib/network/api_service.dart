@@ -2,6 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:movie_app/network/models/cast_model/casts_model.dart';
 import 'package:movie_app/network/models/movie_detail_model/movie_detail_model.dart';
 import 'package:movie_app/network/models/movie_model/movies_model.dart';
+import 'package:movie_app/network/models/reviews_model/reviews_model.dart';
 import 'package:movie_app/network/models/videos_model/videos_model.dart';
 import 'package:retrofit/retrofit.dart';
 
@@ -40,5 +41,9 @@ abstract class ApiService {
 
   @GET("movie/{movieId}/videos")
   Future<VideosModel> getVideosList(
+      @Path() int movieId, @Query("api_key") String apiKey);
+
+  @GET("movie/{movieId}/reviews")
+  Future<ReviewsModel> getReviewsList(
       @Path() int movieId, @Query("api_key") String apiKey);
 }

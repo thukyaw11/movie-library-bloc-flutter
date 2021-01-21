@@ -5,11 +5,13 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:movie_app/network/models/bloc/movie_detail/movie_detail_bloc.dart';
 import 'package:movie_app/network/models/bloc/movie_detail_casts/movie_detail_casts_bloc.dart';
+import 'package:movie_app/network/models/bloc/reviews/reviews_bloc.dart';
 import 'package:movie_app/network/models/bloc/videos/videos_bloc.dart';
 import 'package:movie_app/ui/MyHomePage.dart';
 import 'package:movie_app/ui/components/InfoBar.dart';
 import 'package:movie_app/ui/components/MovieDetailHeading.dart';
 import 'package:movie_app/ui/components/Rating.dart';
+import 'package:movie_app/ui/components/ReviewList.dart';
 import 'package:movie_app/ui/components/SimilarMoviesList.dart';
 import 'package:movie_app/ui/components/loading/LoadingRow.dart';
 import 'package:movie_app/ui/pages/VideoTrailer.dart';
@@ -31,9 +33,11 @@ class _MovieDetailState extends State<MovieDetail> {
     final _topRateBloc = BlocProvider.of<MovieDetailBloc>(context);
     final movieDetailCast = BlocProvider.of<MovieDetailCastsBloc>(context);
     final videoTrailerBloc = BlocProvider.of<VideosBloc>(context);
+    final reviewsBloc = BlocProvider.of<ReviewsBloc>(context);
     _topRateBloc..add(FetchMovieDetailEvent(movieId: id));
     movieDetailCast..add(FetchMovieDetailCastsEvent(movieId: id));
     videoTrailerBloc.add(FetchVideosEvent(movieId: id));
+    reviewsBloc.add(FetchReviewsEvent(movieId: id));
     return Scaffold(
         backgroundColor: Colors.black,
         body: BlocBuilder<MovieDetailBloc, MovieDetailState>(
@@ -466,6 +470,38 @@ class _MovieDetailState extends State<MovieDetail> {
                     ),
                     SimilarMovieslist(
                       movieId: id,
+                    ),
+                    SizedBox(
+                      height: 30,
+                    ),
+                    MovieDetailHeading(title: "Reviews"),
+                    SizedBox(
+                      height: 20,
+                    ),
+                    BlocBuilder<ReviewsBloc, ReviewsState>(
+                      builder: (context, state) {
+                        if (state is ReviewsLoadingState) {
+                          return Center(
+                              child: CircularProgressIndicator(
+                            backgroundColor: Colors.yellow,
+                          ));
+                        }
+
+                        if (state is ReviewsLoadedState) {
+                          return ReviewList();
+                        }
+
+                        if (state is ReviewsEmptyState) {
+                          return Center(
+                            child: Text(
+                              "No Reviews",
+                              style: GoogleFonts.lato(
+                                textStyle: TextStyle(color: Colors.white),
+                              ),
+                            ),
+                          );
+                        }
+                      },
                     )
                   ],
                 ),

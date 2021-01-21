@@ -131,4 +131,24 @@ class _ApiService implements ApiService {
     final value = VideosModel.fromJson(_result.data);
     return value;
   }
+
+  @override
+  Future<ReviewsModel> getReviewsList(movieId, apiKey) async {
+    ArgumentError.checkNotNull(movieId, 'movieId');
+    ArgumentError.checkNotNull(apiKey, 'apiKey');
+    const _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{r'api_key': apiKey};
+    final _data = <String, dynamic>{};
+    final _result = await _dio.request<Map<String, dynamic>>(
+        'movie/$movieId/reviews',
+        queryParameters: queryParameters,
+        options: RequestOptions(
+            method: 'GET',
+            headers: <String, dynamic>{},
+            extra: _extra,
+            baseUrl: baseUrl),
+        data: _data);
+    final value = ReviewsModel.fromJson(_result.data);
+    return value;
+  }
 }

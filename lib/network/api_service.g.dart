@@ -91,4 +91,44 @@ class _ApiService implements ApiService {
     final value = MoviesDetailCastModel.fromJson(_result.data);
     return value;
   }
+
+  @override
+  Future<MoviesModel> getSimilarMoviesList(movieId, apiKey) async {
+    ArgumentError.checkNotNull(movieId, 'movieId');
+    ArgumentError.checkNotNull(apiKey, 'apiKey');
+    const _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{r'api_key': apiKey};
+    final _data = <String, dynamic>{};
+    final _result = await _dio.request<Map<String, dynamic>>(
+        'movie/$movieId/similar',
+        queryParameters: queryParameters,
+        options: RequestOptions(
+            method: 'GET',
+            headers: <String, dynamic>{},
+            extra: _extra,
+            baseUrl: baseUrl),
+        data: _data);
+    final value = MoviesModel.fromJson(_result.data);
+    return value;
+  }
+
+  @override
+  Future<VideosModel> getVideosList(movieId, apiKey) async {
+    ArgumentError.checkNotNull(movieId, 'movieId');
+    ArgumentError.checkNotNull(apiKey, 'apiKey');
+    const _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{r'api_key': apiKey};
+    final _data = <String, dynamic>{};
+    final _result = await _dio.request<Map<String, dynamic>>(
+        'movie/$movieId/videos',
+        queryParameters: queryParameters,
+        options: RequestOptions(
+            method: 'GET',
+            headers: <String, dynamic>{},
+            extra: _extra,
+            baseUrl: baseUrl),
+        data: _data);
+    final value = VideosModel.fromJson(_result.data);
+    return value;
+  }
 }

@@ -1,11 +1,15 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:movie_app/network/models/bloc/movie_detail/movie_detail_bloc.dart';
 import 'package:movie_app/network/models/bloc/movie_detail_casts/movie_detail_casts_bloc.dart';
+import 'package:movie_app/ui/MyHomePage.dart';
 import 'package:movie_app/ui/components/InfoBar.dart';
+import 'package:movie_app/ui/components/MovieDetailHeading.dart';
 import 'package:movie_app/ui/components/Rating.dart';
+import 'package:movie_app/ui/components/SimilarMoviesList.dart';
 import 'package:movie_app/ui/components/loading/LoadingRow.dart';
 
 class MovieDetail extends StatelessWidget {
@@ -278,26 +282,7 @@ class MovieDetail extends StatelessWidget {
                     SizedBox(
                       height: 30,
                     ),
-                    Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 10),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text(
-                            "Casts",
-                            style: GoogleFonts.lato(
-                              textStyle:
-                                  TextStyle(color: Colors.yellow, fontSize: 18),
-                            ),
-                          ),
-                          Container(
-                            height: 6,
-                            width: 40,
-                            color: Colors.yellow,
-                          )
-                        ],
-                      ),
-                    ),
+                    MovieDetailHeading(title: "Top Billed Casts"),
                     SizedBox(
                       height: 10,
                     ),
@@ -386,25 +371,8 @@ class MovieDetail extends StatelessWidget {
                     SizedBox(
                       height: 30,
                     ),
-                    Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 10),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text(
-                            "Info",
-                            style: GoogleFonts.lato(
-                              textStyle:
-                                  TextStyle(color: Colors.yellow, fontSize: 18),
-                            ),
-                          ),
-                          Container(
-                            height: 6,
-                            width: 40,
-                            color: Colors.yellow,
-                          )
-                        ],
-                      ),
+                    MovieDetailHeading(
+                      title: "Info",
                     ),
                     SizedBox(
                       height: 20,
@@ -420,7 +388,8 @@ class MovieDetail extends StatelessWidget {
                           ),
                           InfoBar(
                             keyString: "Budget",
-                            valueString: state.movieDetail.budget.toString(),
+                            valueString:
+                                "\$ ${state.movieDetail.budget.toString()}",
                             icon: Icons.money,
                           ),
                           InfoBar(
@@ -432,8 +401,15 @@ class MovieDetail extends StatelessWidget {
                       ),
                     ),
                     SizedBox(
-                      height: 10,
+                      height: 30,
                     ),
+                    MovieDetailHeading(title: "Similar Movies"),
+                    SizedBox(
+                      height: 20,
+                    ),
+                    SimilarMovieslist(
+                      movieId: id,
+                    )
                   ],
                 ),
               ),
@@ -446,7 +422,10 @@ class MovieDetail extends StatelessWidget {
                       color: Colors.white,
                     ),
                     onPressed: () {
-                      Navigator.pop(context);
+                      Navigator.push(
+                          context,
+                          CupertinoPageRoute(
+                              builder: (context) => MyHomePage()));
                     },
                   ),
                 ),

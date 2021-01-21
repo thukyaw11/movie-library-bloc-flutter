@@ -5,6 +5,7 @@ import 'package:movie_app/network/models/bloc/casts/cast_bloc.dart';
 import 'package:movie_app/network/models/bloc/movie_detail/movie_detail_bloc.dart';
 import 'package:movie_app/network/models/bloc/movie_detail_casts/movie_detail_casts_bloc.dart';
 import 'package:movie_app/network/models/bloc/movies/movies_bloc.dart';
+import 'package:movie_app/network/models/bloc/simliar_movies/similar_movies_bloc.dart';
 import 'package:movie_app/ui/MyHomePage.dart';
 import 'package:movie_app/utils/CustomColor.dart';
 import 'package:provider/provider.dart';
@@ -30,7 +31,9 @@ class MyApp extends StatelessWidget {
               BlocProvider<MovieDetailBloc>(
                   create: (context) => MovieDetailBloc(api: apiService)),
               BlocProvider<MovieDetailCastsBloc>(
-                  create: (context) => MovieDetailCastsBloc(api: apiService))
+                  create: (context) => MovieDetailCastsBloc(api: apiService)),
+              BlocProvider<SimilarMoviesBloc>(
+                  create: (context) => SimilarMoviesBloc(api: apiService))
             ],
             child: MaterialApp(
               title: 'Flutter Demo',

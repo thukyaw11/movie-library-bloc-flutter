@@ -2,6 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:movie_app/network/models/cast_model/casts_model.dart';
 import 'package:movie_app/network/models/movie_detail_model/movie_detail_model.dart';
 import 'package:movie_app/network/models/movie_model/movies_model.dart';
+import 'package:movie_app/network/models/videos_model/videos_model.dart';
 import 'package:retrofit/retrofit.dart';
 
 import 'models/movie_detail_cast_model/movies_detail_cast_model.dart';
@@ -31,5 +32,13 @@ abstract class ApiService {
 
   @GET("movie/{movieId}/credits")
   Future<MoviesDetailCastModel> getCastFromMovieDetail(
+      @Path() int movieId, @Query("api_key") String apiKey);
+
+  @GET("movie/{movieId}/similar")
+  Future<MoviesModel> getSimilarMoviesList(
+      @Path() int movieId, @Query("api_key") String apiKey);
+
+  @GET("movie/{movieId}/videos")
+  Future<VideosModel> getVideosList(
       @Path() int movieId, @Query("api_key") String apiKey);
 }

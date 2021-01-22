@@ -25,6 +25,10 @@ abstract class ApiService {
   Future<MoviesModel> getMovieList(@Path() String paramType,
       @Query("page") int pageId, @Query("api_key") String apiKey);
 
+  @GET("discover/movie")
+  Future<MoviesModel> getMovieByGenre(@Query("page") int pageId,
+      @Query("api_key") String apiKey, @Query("with_genres") int genreId);
+
   @GET("person/popular")
   Future<CastsModel> getCastList(
       @Query("page") int pageId, @Query("api_key") String apiKey);

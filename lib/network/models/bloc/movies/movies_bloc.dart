@@ -16,6 +16,7 @@ class MoviesBloc extends Bloc<MoviesEvent, MoviesState> {
   Stream<MoviesState> mapEventToState(
     MoviesEvent event,
   ) async* {
+    yield MoviesInitial();
     if (event is FetchMoviesEvent) {
       yield MoviesLoadingState();
       try {
@@ -30,6 +31,19 @@ class MoviesBloc extends Bloc<MoviesEvent, MoviesState> {
             movies: responseTopRated,
             upComingMovies: upComing,
             popularMovies: popularMovies);
+      } on SocketException {
+        yield MoviesErrorState();
+      } on Exception {
+        yield MoviesErrorState();
+      }
+    }
+
+    if (event is FetchMoviesByGenre) {
+      yield MoviesLoadingState();
+      try {
+        final response =
+            await api.getMovieByGenre(event.pageId, apiKey, event.genreId);
+        yield MoviesLoadedState(movies: response);
       } on SocketException {
         yield MoviesErrorState();
       } on Exception {

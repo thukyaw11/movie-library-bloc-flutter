@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:movie_app/network/models/bloc/genres/genres_bloc.dart';
+import 'package:movie_app/network/models/bloc/movies/movies_bloc.dart';
+import 'package:movie_app/ui/pages/Movies.dart';
 
 class SearchPage extends StatefulWidget {
   @override
@@ -17,7 +19,9 @@ class _SearchPageState extends State<SearchPage> {
   @override
   Widget build(BuildContext context) {
     final _bloc = BlocProvider.of<GenresBloc>(context);
+    final _movieBloc = BlocProvider.of<MoviesBloc>(context);
     _bloc..add(FetchGenresEvent());
+    // _movieBloc..add(FetchMoviesByGenre(genreId: 27, pageId: 1));
 
     return Scaffold(
       appBar: AppBar(
@@ -42,6 +46,35 @@ class _SearchPageState extends State<SearchPage> {
               SizedBox(
                 height: 20,
               ),
+              BlocBuilder<MoviesBloc, MoviesState>(builder: (context, state) {
+                if (state is MoviesInitial) {
+                  return Text("Search Now",
+                      style: TextStyle(color: Colors.yellow));
+                }
+
+                if (state is MoviesLoadingState) {
+                  return Text("loading",
+                      style: TextStyle(color: Colors.yellow));
+                }
+
+                if (state is MoviesLoadedState) {
+                  return Text("data loaded",
+                      style: TextStyle(color: Colors.yellow));
+                }
+                if (state is MoviesErrorState) {
+                  return Center(
+                      child: Text(
+                    "error",
+                    style: TextStyle(color: Colors.red),
+                  ));
+                }
+
+                return Center(
+                    child: Text(
+                  "error",
+                  style: TextStyle(color: Colors.white),
+                ));
+              }),
               BlocBuilder<GenresBloc, GenresState>(builder: (context, state) {
                 if (state is GenresLoadingState) {
                   return Center(
@@ -66,25 +99,31 @@ class _SearchPageState extends State<SearchPage> {
                       direction: Axis.horizontal,
                       children: [
                         for (var item in state.genresModel.genres)
-                          Container(
-                            margin: EdgeInsets.all(8),
-                            padding: EdgeInsets.symmetric(
-                                horizontal: 6, vertical: 3),
-                            height: 30,
-                            width: 100,
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(4),
-                              color: Colors.white10,
-                            ),
-                            child: Center(
-                              child: Text(
-                                "${item.name}",
-                                style: GoogleFonts.lato(
-                                    textStyle: TextStyle(
-                                        color: Colors.white, fontSize: 10)),
+                          FlatButton(
+                            onPressed: () {
+                              _movieBloc.add(FetchMoviesByGenre(
+                                  genreId: item.id, pageId: 1));
+                            },
+                            child: Container(
+                              margin: EdgeInsets.all(8),
+                              padding: EdgeInsets.symmetric(
+                                  horizontal: 6, vertical: 3),
+                              height: 30,
+                              width: 100,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(4),
+                                color: Colors.white10,
+                              ),
+                              child: Center(
+                                child: Text(
+                                  "${item.name}",
+                                  style: GoogleFonts.lato(
+                                      textStyle: TextStyle(
+                                          color: Colors.white, fontSize: 10)),
+                                ),
                               ),
                             ),
-                          )
+                          ),
                       ],
                     ),
                   );

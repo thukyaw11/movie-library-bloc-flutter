@@ -13,3 +13,10 @@ class FetchMoviesEvent extends MoviesEvent {
   FetchMoviesEvent({@required this.type, @required this.pageId})
       : assert(type != null);
 }
+
+class FetchMoviesByGenre extends MoviesEvent {
+  final int pageId;
+  final int genreId;
+
+  FetchMoviesByGenre({this.pageId, this.genreId});
+}

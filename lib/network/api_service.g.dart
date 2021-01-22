@@ -40,6 +40,30 @@ class _ApiService implements ApiService {
   }
 
   @override
+  Future<MoviesModel> getMovieByGenre(pageId, apiKey, genreId) async {
+    ArgumentError.checkNotNull(pageId, 'pageId');
+    ArgumentError.checkNotNull(apiKey, 'apiKey');
+    ArgumentError.checkNotNull(genreId, 'genreId');
+    const _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{
+      r'page': pageId,
+      r'api_key': apiKey,
+      r'with_genres': genreId
+    };
+    final _data = <String, dynamic>{};
+    final _result = await _dio.request<Map<String, dynamic>>('discover/movie',
+        queryParameters: queryParameters,
+        options: RequestOptions(
+            method: 'GET',
+            headers: <String, dynamic>{},
+            extra: _extra,
+            baseUrl: baseUrl),
+        data: _data);
+    final value = MoviesModel.fromJson(_result.data);
+    return value;
+  }
+
+  @override
   Future<CastsModel> getCastList(pageId, apiKey) async {
     ArgumentError.checkNotNull(pageId, 'pageId');
     ArgumentError.checkNotNull(apiKey, 'apiKey');

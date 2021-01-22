@@ -6,10 +6,13 @@ import 'package:movie_app/content/demo_data.dart';
 import 'package:movie_app/network/models/bloc/movies/movies_bloc.dart';
 import 'package:movie_app/ui/components/MovieRow.dart';
 import 'package:movie_app/ui/components/loading/LoadingRow.dart';
+import 'package:movie_app/ui/pages/Casts.dart';
+import 'package:movie_app/ui/pages/Movies.dart';
 import 'components/CarouselImageCard.dart';
 import 'components/Drawer.dart';
 import 'components/CastRowList.dart';
 import 'components/SliderHeader.dart';
+import 'package:pull_to_refresh/pull_to_refresh.dart';
 
 class MyHomePage extends StatefulWidget {
   @override
@@ -17,8 +20,17 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+  RefreshController _refreshController =
+      RefreshController(initialRefresh: false);
   int _currentIndex = 0;
   PageController _pageController;
+
+  void _onRefresh() async {
+    // monitor network fetch
+    await Future.delayed(Duration(milliseconds: 1000));
+    // if failed,use refreshFailed()
+    _refreshController.refreshCompleted();
+  }
 
   @override
   void initState() {
@@ -35,8 +47,9 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
     final _topRateBloc = BlocProvider.of<MoviesBloc>(context);
-    _topRateBloc..add(FetchMoviesEvent(type: "popular"));
+    _topRateBloc..add(FetchMoviesEvent(type: "popular", pageId: 2));
     return Scaffold(
+      backgroundColor: Colors.black,
       appBar: AppBar(
         actions: [
           IconButton(
@@ -50,147 +63,154 @@ class _MyHomePageState extends State<MyHomePage> {
         elevation: 0,
       ),
       drawer: CustomDrawer(),
-      body: SizedBox.expand(
-        child: PageView(
-          controller: _pageController,
-          onPageChanged: (index) {
-            setState(() => _currentIndex = index);
-          },
-          children: <Widget>[
-            SingleChildScrollView(
-              child: Container(
-                color: Colors.black,
-                child: Column(
-                  children: [
-                    Container(
-                      width: double.infinity,
-                      child: CarouselSlider(
-                        options: CarouselOptions(
-                          autoPlay: true,
-                          enlargeCenterPage: true,
-                          viewportFraction: 0.9,
-                          aspectRatio: 2.0,
+      body: SmartRefresher(
+        enablePullDown: true,
+        header: WaterDropHeader(),
+        controller: _refreshController,
+        onRefresh: _onRefresh,
+        child: SizedBox.expand(
+          child: PageView(
+            controller: _pageController,
+            onPageChanged: (index) {
+              setState(() => _currentIndex = index);
+            },
+            children: <Widget>[
+              SingleChildScrollView(
+                child: Container(
+                  color: Colors.black,
+                  child: Column(
+                    children: [
+                      Container(
+                        width: double.infinity,
+                        child: CarouselSlider(
+                          options: CarouselOptions(
+                            autoPlay: true,
+                            enlargeCenterPage: true,
+                            viewportFraction: 0.9,
+                            aspectRatio: 2.0,
+                          ),
+                          items: carouselItems
+                              .map(
+                                (item) => Center(
+                                    child: CarouselImageCard(
+                                  img: item['img'],
+                                  name: item['name'],
+                                )),
+                              )
+                              .toList(),
                         ),
-                        items: carouselItems
-                            .map(
-                              (item) => Center(
-                                  child: CarouselImageCard(
-                                img: item['img'],
-                                name: item['name'],
-                              )),
-                            )
-                            .toList(),
                       ),
-                    ),
-                    SliderHeader(
-                      title: "Cast",
-                    ),
-                    CastRowList(),
-                    SliderHeader(
-                      title: "Up Coming",
-                    ),
-                    BlocBuilder<MoviesBloc, MoviesState>(
-                      builder: (context, state) {
-                        if (state is MoviesLoadingState) {
-                          return LoadingRow();
-                        }
+                      SliderHeader(
+                        title: "Cast",
+                      ),
+                      CastRowList(),
+                      SliderHeader(
+                        title: "Up Coming",
+                      ),
+                      BlocBuilder<MoviesBloc, MoviesState>(
+                        builder: (context, state) {
+                          if (state is MoviesLoadingState) {
+                            return LoadingRow();
+                          }
 
-                        if (state is MoviesErrorState) {
-                          return Center(
-                            child: Text("Error"),
+                          if (state is MoviesErrorState) {
+                            return Center(
+                              child: Text("Error"),
+                            );
+                          }
+
+                          if (state is MoviesLoadedState) {
+                            return MovieRowList(
+                              allMoviesModel: state.upComingMovies,
+                            );
+                          }
+
+                          return CircularProgressIndicator(
+                            backgroundColor: Colors.deepOrange,
                           );
-                        }
+                        },
+                      ),
+                      SliderHeader(
+                        title: "Popular",
+                      ),
+                      BlocBuilder<MoviesBloc, MoviesState>(
+                        builder: (context, state) {
+                          if (state is MoviesLoadingState) {
+                            return LoadingRow();
+                          }
 
-                        if (state is MoviesLoadedState) {
-                          return MovieRowList(
-                            allMoviesModel: state.upComingMovies,
+                          if (state is MoviesErrorState) {
+                            return Center(
+                              child: Text("Error"),
+                            );
+                          }
+
+                          if (state is MoviesLoadedState) {
+                            return MovieRowList(
+                              allMoviesModel: state.popularMovies,
+                            );
+                          }
+
+                          return CircularProgressIndicator(
+                            backgroundColor: Colors.deepOrange,
                           );
-                        }
+                        },
+                      ),
+                      SliderHeader(
+                        title: "Top Rated",
+                      ),
+                      BlocBuilder<MoviesBloc, MoviesState>(
+                        builder: (context, state) {
+                          if (state is MoviesLoadingState) {
+                            return LoadingRow();
+                          }
 
-                        return CircularProgressIndicator(
-                          backgroundColor: Colors.deepOrange,
-                        );
-                      },
-                    ),
-                    SliderHeader(
-                      title: "Popular",
-                    ),
-                    BlocBuilder<MoviesBloc, MoviesState>(
-                      builder: (context, state) {
-                        if (state is MoviesLoadingState) {
-                          return LoadingRow();
-                        }
+                          if (state is MoviesErrorState) {
+                            return Center(
+                              child: Text("Error"),
+                            );
+                          }
 
-                        if (state is MoviesErrorState) {
-                          return Center(
-                            child: Text("Error"),
+                          if (state is MoviesLoadedState) {
+                            return MovieRowList(
+                              allMoviesModel: state.movies,
+                            );
+                          }
+
+                          return CircularProgressIndicator(
+                            backgroundColor: Colors.deepOrange,
                           );
-                        }
-
-                        if (state is MoviesLoadedState) {
-                          return MovieRowList(
-                            allMoviesModel: state.popularMovies,
-                          );
-                        }
-
-                        return CircularProgressIndicator(
-                          backgroundColor: Colors.deepOrange,
-                        );
-                      },
-                    ),
-                    SliderHeader(
-                      title: "Top Rated",
-                    ),
-                    BlocBuilder<MoviesBloc, MoviesState>(
-                      builder: (context, state) {
-                        if (state is MoviesLoadingState) {
-                          return LoadingRow();
-                        }
-
-                        if (state is MoviesErrorState) {
-                          return Center(
-                            child: Text("Error"),
-                          );
-                        }
-
-                        if (state is MoviesLoadedState) {
-                          return MovieRowList(
-                            allMoviesModel: state.movies,
-                          );
-                        }
-
-                        return CircularProgressIndicator(
-                          backgroundColor: Colors.deepOrange,
-                        );
-                      },
-                    ),
-                    // MovieRowList(
-                    //   listData: topRatedList,
-                    // ),
-                    SliderHeader(
-                      title: "Comedy",
-                    ),
-                    // MovieRowList(
-                    //   listData: topRatedList,
-                    // ),
-                  ],
+                        },
+                      ),
+                      // MovieRowList(
+                      //   listData: topRatedList,
+                      // ),
+                      SliderHeader(
+                        title: "Comedy",
+                      ),
+                      // MovieRowList(
+                      //   listData: topRatedList,
+                      // ),
+                    ],
+                  ),
                 ),
               ),
-            ),
-            Container(
-              color: Colors.black,
-              // child: Movies(),
-            ),
-            Container(
-              color: Colors.green,
-            ),
-            Container(
-              color: Colors.blue,
-            ),
-            Container(
-              color: Colors.blue,
-            ),
-          ],
+              Container(
+                color: Colors.black,
+                child: Movies(),
+              ),
+              Container(
+                color: Colors.black,
+                child: CastListPage(),
+              ),
+              Container(
+                color: Colors.blue,
+              ),
+              Container(
+                color: Colors.blue,
+              ),
+            ],
+          ),
         ),
       ),
       bottomNavigationBar: BottomNavyBar(
@@ -207,31 +227,23 @@ class _MyHomePageState extends State<MyHomePage> {
               activeColor: Colors.orange,
               inactiveColor: Colors.orangeAccent),
           BottomNavyBarItem(
-              icon: Icon(Icons.movie),
+              icon: Icon(Icons.movie_outlined),
               title: Text('Movies', textAlign: TextAlign.center),
               activeColor: Colors.red,
               inactiveColor: Colors.redAccent),
           BottomNavyBarItem(
-              icon: Icon(Icons.video_collection),
-              title: Text('Series', textAlign: TextAlign.center),
+              icon: Icon(Icons.people_outline),
+              title: Text('Casts', textAlign: TextAlign.center),
               activeColor: Colors.blue,
               inactiveColor: Colors.blueAccent),
           BottomNavyBarItem(
-              icon: Icon(Icons.settings),
+              icon: Icon(Icons.settings_outlined),
               title: Text(
                 'Settings',
                 textAlign: TextAlign.center,
               ),
-              activeColor: Colors.grey,
-              inactiveColor: Colors.pink),
-          BottomNavyBarItem(
-              icon: Icon(Icons.account_box),
-              title: Text(
-                'Settings',
-                textAlign: TextAlign.center,
-              ),
-              activeColor: Colors.grey,
-              inactiveColor: Colors.green),
+              activeColor: Colors.pink,
+              inactiveColor: Colors.pinkAccent),
         ],
       ),
     );

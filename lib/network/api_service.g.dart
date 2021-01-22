@@ -17,11 +17,15 @@ class _ApiService implements ApiService {
   String baseUrl;
 
   @override
-  Future<MoviesModel> getMovieList(paramType, apiKey) async {
+  Future<MoviesModel> getMovieList(paramType, pageId, apiKey) async {
     ArgumentError.checkNotNull(paramType, 'paramType');
+    ArgumentError.checkNotNull(pageId, 'pageId');
     ArgumentError.checkNotNull(apiKey, 'apiKey');
     const _extra = <String, dynamic>{};
-    final queryParameters = <String, dynamic>{r'api_key': apiKey};
+    final queryParameters = <String, dynamic>{
+      r'page': pageId,
+      r'api_key': apiKey
+    };
     final _data = <String, dynamic>{};
     final _result = await _dio.request<Map<String, dynamic>>('movie/$paramType',
         queryParameters: queryParameters,

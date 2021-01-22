@@ -9,5 +9,7 @@ abstract class MoviesEvent {
 
 class FetchMoviesEvent extends MoviesEvent {
   final String type;
-  FetchMoviesEvent({@required this.type}) : assert(type != null);
+  final int pageId;
+  FetchMoviesEvent({@required this.type, @required this.pageId})
+      : assert(type != null);
 }

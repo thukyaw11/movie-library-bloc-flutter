@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:movie_app/network/models/bloc/casts/cast_bloc.dart';
+import 'package:movie_app/ui/components/BuildCastCard.dart';
 import 'package:movie_app/ui/components/loading/LoadingRow.dart';
 
 class CastRowList extends StatelessWidget {
@@ -30,43 +31,8 @@ class CastRowList extends StatelessWidget {
             scrollDirection: Axis.horizontal,
             itemCount: state.castList.casts.length,
             itemBuilder: (BuildContext context, int index) {
-              return Column(
-                children: [
-                  Container(
-                    height: 60,
-                    width: 60,
-                    margin: EdgeInsets.all(8),
-                    child: ClipRRect(
-                      borderRadius: BorderRadius.circular(200),
-                      child: CachedNetworkImage(
-                        fit: BoxFit.fill,
-                        imageUrl:
-                            "https://image.tmdb.org/t/p/original${state.castList.casts[index].profilePath}",
-                        progressIndicatorBuilder:
-                            (context, url, downloadProgress) {
-                          return Center(
-                            child: CircularProgressIndicator(
-                              backgroundColor: Colors.grey,
-                              value: downloadProgress.progress,
-                            ),
-                          );
-                        },
-                      ),
-                    ),
-                  ),
-                  SizedBox(
-                    height: 5,
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 10),
-                    child: Text(
-                      "${state.castList.casts[index].name}",
-                      style: GoogleFonts.lato(
-                          textStyle:
-                              TextStyle(color: Colors.white, fontSize: 10)),
-                    ),
-                  )
-                ],
+              return BuildCastCard(
+                castModel: state.castList.casts[index],
               );
             },
           ),

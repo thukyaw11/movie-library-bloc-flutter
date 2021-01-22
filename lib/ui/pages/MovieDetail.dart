@@ -85,7 +85,7 @@ class _MovieDetailState extends State<MovieDetail> {
                           bottom: 20,
                           left: 15,
                           child: Text(
-                            "${state.movieDetail.title}",
+                            "${state.movieDetail.title} ",
                             style: GoogleFonts.lato(
                               textStyle:
                                   TextStyle(color: Colors.white, fontSize: 25),
@@ -488,7 +488,9 @@ class _MovieDetailState extends State<MovieDetail> {
                         }
 
                         if (state is ReviewsLoadedState) {
-                          return ReviewList();
+                          return ReviewList(
+                            result: state.reviewsModel,
+                          );
                         }
 
                         if (state is ReviewsEmptyState) {
@@ -515,10 +517,7 @@ class _MovieDetailState extends State<MovieDetail> {
                       color: Colors.white,
                     ),
                     onPressed: () {
-                      Navigator.push(
-                          context,
-                          CupertinoPageRoute(
-                              builder: (context) => MyHomePage()));
+                      Navigator.of(context).pop();
                     },
                   ),
                 ),

@@ -6,11 +6,15 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:movie_app/ui/pages/MovieDetail.dart';
 
 class MovieCard extends StatelessWidget {
-  const MovieCard({Key key, this.moviesModel, @required this.index})
+  const MovieCard(
+      {Key key,
+      this.moviesModel,
+      @required this.index,
+      this.nameDisplay = true})
       : super(key: key);
 
   final List<MovieModel> moviesModel;
-
+  final bool nameDisplay;
   final int index;
 
   @override
@@ -47,14 +51,16 @@ class MovieCard extends StatelessWidget {
             ),
           ),
         ),
-        SizedBox(
-          height: 5,
-        ),
-        Text(
-          "${moviesModel[index].title}",
-          style: GoogleFonts.lato(
-              textStyle: TextStyle(color: Colors.white, fontSize: 10)),
-        )
+        if (nameDisplay)
+          SizedBox(
+            height: 5,
+          ),
+        if (nameDisplay)
+          Text(
+            "${moviesModel[index].title}",
+            style: GoogleFonts.lato(
+                textStyle: TextStyle(color: Colors.white, fontSize: 10)),
+          )
       ],
     );
   }

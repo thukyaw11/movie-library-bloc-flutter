@@ -17,6 +17,7 @@ class ReviewsModel {
 class ReviewModel {
   String author;
   String content;
+  @JsonKey(name: "author_details")
   AuthorDetails authorDetails;
   ReviewModel({this.author, this.content, this.authorDetails});
   factory ReviewModel.fromJson(Map<String, dynamic> jsonData) =>
@@ -28,10 +29,7 @@ class ReviewModel {
 @JsonSerializable()
 class AuthorDetails {
   String username;
-  @JsonKey(name: 'avatar_path')
-  String avatarPath;
-
-  AuthorDetails({this.username, this.avatarPath});
+  AuthorDetails({this.username});
 
   factory AuthorDetails.fromJson(Map<String, dynamic> jsonData) =>
       _$AuthorDetailsFromJson(jsonData);

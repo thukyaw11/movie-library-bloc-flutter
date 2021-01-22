@@ -19,9 +19,12 @@ class MoviesBloc extends Bloc<MoviesEvent, MoviesState> {
     if (event is FetchMoviesEvent) {
       yield MoviesLoadingState();
       try {
-        final responseTopRated = await api.getMovieList("top_rated", apiKey);
-        final upComing = await api.getMovieList("upcoming", apiKey);
-        final popularMovies = await api.getMovieList("popular", apiKey);
+        final responseTopRated =
+            await api.getMovieList("top_rated", event.pageId, apiKey);
+        final upComing =
+            await api.getMovieList("upcoming", event.pageId, apiKey);
+        final popularMovies =
+            await api.getMovieList("popular", event.pageId, apiKey);
 
         yield MoviesLoadedState(
             movies: responseTopRated,

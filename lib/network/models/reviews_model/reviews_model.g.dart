@@ -24,9 +24,10 @@ ReviewModel _$ReviewModelFromJson(Map<String, dynamic> json) {
   return ReviewModel(
     author: json['author'] as String,
     content: json['content'] as String,
-    authorDetails: json['authorDetails'] == null
+    authorDetails: json['author_details'] == null
         ? null
-        : AuthorDetails.fromJson(json['authorDetails'] as Map<String, dynamic>),
+        : AuthorDetails.fromJson(
+            json['author_details'] as Map<String, dynamic>),
   );
 }
 
@@ -34,18 +35,16 @@ Map<String, dynamic> _$ReviewModelToJson(ReviewModel instance) =>
     <String, dynamic>{
       'author': instance.author,
       'content': instance.content,
-      'authorDetails': instance.authorDetails,
+      'author_details': instance.authorDetails,
     };
 
 AuthorDetails _$AuthorDetailsFromJson(Map<String, dynamic> json) {
   return AuthorDetails(
     username: json['username'] as String,
-    avatarPath: json['avatar_path'] as String,
   );
 }
 
 Map<String, dynamic> _$AuthorDetailsToJson(AuthorDetails instance) =>
     <String, dynamic>{
       'username': instance.username,
-      'avatar_path': instance.avatarPath,
     };

@@ -22,7 +22,7 @@ class CastBloc extends Bloc<CastEvent, CastState> {
       yield CastLoadingState();
 
       try {
-        final castResponse = await api.getCastList(apiKey);
+        final castResponse = await api.getCastList(event.pageId, apiKey);
         yield CastLoadedState(castList: castResponse);
       } on SocketException {
         yield CastErrorState();

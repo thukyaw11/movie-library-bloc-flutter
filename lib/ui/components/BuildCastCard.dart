@@ -22,8 +22,9 @@ class BuildCastCard extends StatelessWidget {
             borderRadius: BorderRadius.circular(200),
             child: CachedNetworkImage(
               fit: BoxFit.fill,
-              imageUrl:
-                  "https://image.tmdb.org/t/p/original${castModel.profilePath}",
+              imageUrl: castModel.profilePath != null
+                  ? "https://image.tmdb.org/t/p/original${castModel.profilePath}"
+                  : "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQGyb4uoKEITC5H0mo3gEtXpr4tYRUt9Wz8vg&usqp=CAU",
               progressIndicatorBuilder: (context, url, downloadProgress) {
                 return Center(
                   child: CircularProgressIndicator(

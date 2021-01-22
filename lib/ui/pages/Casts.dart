@@ -27,7 +27,7 @@ class _CastListPageState extends State<CastListPage> {
     final double itemWidth = size.width / 2;
 
     final castBloc = BlocProvider.of<CastBloc>(context);
-    castBloc.add(FetchCastEvent());
+    castBloc.add(FetchCastEvent(pageId: pageId));
     return BlocBuilder<CastBloc, CastState>(
       builder: (context, state) {
         if (state is CastLoadingState) {
@@ -60,7 +60,8 @@ class _CastListPageState extends State<CastListPage> {
                 if (index == castsModel.casts.length) {
                   return InkWell(
                     child: CastLoadMore(),
-                    onTap: () => castBloc..add(FetchCastEvent()),
+                    onTap: () =>
+                        castBloc..add(FetchCastEvent(pageId: ++pageId)),
                   );
                 }
 
@@ -69,7 +70,8 @@ class _CastListPageState extends State<CastListPage> {
                     child: CastLoadMore(
                       direction: 'back',
                     ),
-                    onTap: () => castBloc..add(FetchCastEvent()),
+                    onTap: () =>
+                        castBloc..add(FetchCastEvent(pageId: --pageId)),
                   );
                 }
                 if (index != castsModel.casts.length)

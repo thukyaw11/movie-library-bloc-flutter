@@ -7,4 +7,7 @@ abstract class CastEvent extends Equatable {
   List<Object> get props => [];
 }
 
-class FetchCastEvent extends CastEvent {}
+class FetchCastEvent extends CastEvent {
+  final int pageId;
+  FetchCastEvent({this.pageId});
+}

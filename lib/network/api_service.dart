@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:movie_app/network/models/cast_model/casts_model.dart';
+import 'package:movie_app/network/models/genres_model/genres_model.dart';
 import 'package:movie_app/network/models/movie_detail_model/movie_detail_model.dart';
 import 'package:movie_app/network/models/movie_model/movies_model.dart';
 import 'package:movie_app/network/models/reviews_model/reviews_model.dart';
@@ -25,7 +26,11 @@ abstract class ApiService {
       @Query("page") int pageId, @Query("api_key") String apiKey);
 
   @GET("person/popular")
-  Future<CastsModel> getCastList(@Query("api_key") String apiKey);
+  Future<CastsModel> getCastList(
+      @Query("page") int pageId, @Query("api_key") String apiKey);
+
+  @GET('genre/movie/list')
+  Future<GenresModel> getGenreList(@Query("api_key") String apiKey);
 
   @GET("movie/{movieId}")
   Future<MovieDetail> getMovieDetail(

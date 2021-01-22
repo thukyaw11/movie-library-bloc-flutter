@@ -8,6 +8,8 @@ import 'package:movie_app/ui/components/MovieRow.dart';
 import 'package:movie_app/ui/components/loading/LoadingRow.dart';
 import 'package:movie_app/ui/pages/Casts.dart';
 import 'package:movie_app/ui/pages/Movies.dart';
+import 'package:movie_app/ui/pages/Search.dart';
+import 'package:movie_app/utils/FadeRoute.dart';
 import 'components/CarouselImageCard.dart';
 import 'components/Drawer.dart';
 import 'components/CastRowList.dart';
@@ -47,12 +49,15 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
     final _topRateBloc = BlocProvider.of<MoviesBloc>(context);
-    _topRateBloc..add(FetchMoviesEvent(type: "popular", pageId: 2));
+    _topRateBloc..add(FetchMoviesEvent(type: "popular", pageId: 1));
     return Scaffold(
       backgroundColor: Colors.black,
       appBar: AppBar(
         actions: [
           IconButton(
+            onPressed: () {
+              Navigator.of(context).push(FadeRoute(page: SearchPage()));
+            },
             icon: Icon(
               Icons.search,
               color: Colors.white,

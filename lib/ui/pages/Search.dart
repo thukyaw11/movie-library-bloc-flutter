@@ -4,8 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:movie_app/network/models/bloc/genres/genres_bloc.dart';
-import 'package:movie_app/network/models/bloc/movies/movies_bloc.dart';
-import 'package:movie_app/ui/pages/Movies.dart';
+import 'package:movie_app/network/models/bloc/search/search_bloc.dart';
+import 'package:movie_app/ui/components/MovieCard.dart';
 
 class SearchPage extends StatefulWidget {
   @override
@@ -15,12 +15,21 @@ class SearchPage extends StatefulWidget {
 class _SearchPageState extends State<SearchPage> {
   TextEditingController _searchQueryController = TextEditingController();
   bool _isSearching = false;
-  String searchQuery = "Search query";
+  String searchTitle;
+  String genreTitle;
+
   @override
   Widget build(BuildContext context) {
     final _bloc = BlocProvider.of<GenresBloc>(context);
-    final _movieBloc = BlocProvider.of<MoviesBloc>(context);
+    final _searchBloc = BlocProvider.of<SearchBloc>(context);
     _bloc..add(FetchGenresEvent());
+    _searchBloc..add(FetchSearchInitialEvent());
+
+    var size = MediaQuery.of(context).size;
+
+    final double itemHeight = (size.height - kToolbarHeight - 30) / 2;
+    final double itemWidth = size.width / 2;
+
     // _movieBloc..add(FetchMoviesByGenre(genreId: 27, pageId: 1));
 
     return Scaffold(
@@ -34,34 +43,36 @@ class _SearchPageState extends State<SearchPage> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 10),
-                child: Text(
-                  "Categories you may like",
-                  style: GoogleFonts.lato(
-                    color: Colors.white,
-                  ),
-                ),
-              ),
-              SizedBox(
-                height: 20,
-              ),
-              BlocBuilder<MoviesBloc, MoviesState>(builder: (context, state) {
-                if (state is MoviesInitial) {
-                  return Text("Search Now",
-                      style: TextStyle(color: Colors.yellow));
+              BlocBuilder<SearchBloc, SearchState>(builder: (context, state) {
+                if (state is SearchInitial) {
+                  return Text("");
                 }
 
-                if (state is MoviesLoadingState) {
+                if (state is SearchDataLoadingState) {
                   return Text("loading",
                       style: TextStyle(color: Colors.yellow));
                 }
 
-                if (state is MoviesLoadedState) {
-                  return Text("data loaded",
-                      style: TextStyle(color: Colors.yellow));
+                if (state is SearchDataLoadedState) {
+                  return GridView.builder(
+                    physics: BouncingScrollPhysics(),
+                    shrinkWrap: true,
+                    itemCount: state.searchResults.searchResults.length,
+                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                        crossAxisCount: 3,
+                        crossAxisSpacing: 10,
+                        childAspectRatio: (itemWidth / itemHeight),
+                        mainAxisSpacing: 10),
+                    itemBuilder: (BuildContext context, int index) {
+                      return MovieCard(
+                        index: index,
+                        moviesModel: state.searchResults.searchResults,
+                      );
+                    },
+                  );
                 }
-                if (state is MoviesErrorState) {
+
+                if (state is SearchDataErrorState) {
                   return Center(
                       child: Text(
                     "error",
@@ -75,6 +86,18 @@ class _SearchPageState extends State<SearchPage> {
                   style: TextStyle(color: Colors.white),
                 ));
               }),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 10),
+                child: Text(
+                  "Categories you may like",
+                  style: GoogleFonts.lato(
+                    color: Colors.white,
+                  ),
+                ),
+              ),
+              SizedBox(
+                height: 20,
+              ),
               BlocBuilder<GenresBloc, GenresState>(builder: (context, state) {
                 if (state is GenresLoadingState) {
                   return Center(
@@ -96,13 +119,16 @@ class _SearchPageState extends State<SearchPage> {
                   return Container(
                     width: double.infinity,
                     child: Wrap(
+                      alignment: WrapAlignment.center,
                       direction: Axis.horizontal,
                       children: [
                         for (var item in state.genresModel.genres)
                           FlatButton(
+                            padding: EdgeInsets.all(0),
                             onPressed: () {
-                              _movieBloc.add(FetchMoviesByGenre(
-                                  genreId: item.id, pageId: 1));
+                              _searchBloc
+                                  .add(FetchSearchDataEvent(genreId: item.id));
+                              genreTitle = item.name;
                             },
                             child: Container(
                               margin: EdgeInsets.all(8),
@@ -147,9 +173,9 @@ class _SearchPageState extends State<SearchPage> {
     return TextField(
       cursorColor: Colors.white,
       controller: _searchQueryController,
-      autofocus: true,
+      autofocus: false,
       decoration: InputDecoration(
-        hintText: "Search Movie ...",
+        hintText: "Search Movie ",
         border: InputBorder.none,
         hintStyle: TextStyle(color: Colors.white30),
       ),
@@ -174,7 +200,19 @@ class _SearchPageState extends State<SearchPage> {
     }
 
     return <Widget>[
-      IconButton(icon: const Icon(Icons.search), onPressed: () {}),
+      IconButton(
+          icon: const Icon(Icons.search),
+          onPressed: () {
+            if (_searchQueryController.text == '') {
+              return;
+            }
+            genreTitle = '';
+            searchTitle = _searchQueryController.text;
+            BlocProvider.of<SearchBloc>(context).add(
+                FetchSearchDataEventByQuery(
+                    query: _searchQueryController.text));
+            _searchQueryController.text = '';
+          }),
     ];
   }
 }

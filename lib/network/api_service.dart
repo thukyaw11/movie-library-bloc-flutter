@@ -1,9 +1,11 @@
 import 'package:dio/dio.dart';
 import 'package:movie_app/network/models/cast_model/casts_model.dart';
 import 'package:movie_app/network/models/genres_model/genres_model.dart';
+import 'package:movie_app/network/models/movie_by_cast_model/movies_by_cast_model.dart';
 import 'package:movie_app/network/models/movie_detail_model/movie_detail_model.dart';
 import 'package:movie_app/network/models/movie_model/movies_model.dart';
 import 'package:movie_app/network/models/reviews_model/reviews_model.dart';
+import 'package:movie_app/network/models/search_model/search_model.dart';
 import 'package:movie_app/network/models/videos_model/videos_model.dart';
 import 'package:retrofit/retrofit.dart';
 
@@ -25,8 +27,16 @@ abstract class ApiService {
   Future<MoviesModel> getMovieList(@Path() String paramType,
       @Query("page") int pageId, @Query("api_key") String apiKey);
 
+  @GET("search/movie")
+  Future<SearchModel> getMovieByQuery(@Query("page") int pageId,
+      @Query("query") String query, @Query("api_key") String apiKey);
+
+  @GET("person/{personId}/movie_credits")
+  Future<MoviesByCastModel> getMovieByCast(
+      @Path("personId") int personId, @Query("api_key") String apiKey);
+
   @GET("discover/movie")
-  Future<MoviesModel> getMovieByGenre(@Query("page") int pageId,
+  Future<SearchModel> getMovieByGenre(@Query("page") int pageId,
       @Query("api_key") String apiKey, @Query("with_genres") int genreId);
 
   @GET("person/popular")

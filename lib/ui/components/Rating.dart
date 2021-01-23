@@ -21,7 +21,6 @@ class RatingBar extends StatelessWidget {
         size: 14,
       );
     }
-
     return new InkResponse(
       child: icon,
     );

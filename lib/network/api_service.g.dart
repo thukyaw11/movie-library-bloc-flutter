@@ -40,7 +40,51 @@ class _ApiService implements ApiService {
   }
 
   @override
-  Future<MoviesModel> getMovieByGenre(pageId, apiKey, genreId) async {
+  Future<SearchModel> getMovieByQuery(pageId, query, apiKey) async {
+    ArgumentError.checkNotNull(pageId, 'pageId');
+    ArgumentError.checkNotNull(query, 'query');
+    ArgumentError.checkNotNull(apiKey, 'apiKey');
+    const _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{
+      r'page': pageId,
+      r'query': query,
+      r'api_key': apiKey
+    };
+    final _data = <String, dynamic>{};
+    final _result = await _dio.request<Map<String, dynamic>>('search/movie',
+        queryParameters: queryParameters,
+        options: RequestOptions(
+            method: 'GET',
+            headers: <String, dynamic>{},
+            extra: _extra,
+            baseUrl: baseUrl),
+        data: _data);
+    final value = SearchModel.fromJson(_result.data);
+    return value;
+  }
+
+  @override
+  Future<MoviesByCastModel> getMovieByCast(personId, apiKey) async {
+    ArgumentError.checkNotNull(personId, 'personId');
+    ArgumentError.checkNotNull(apiKey, 'apiKey');
+    const _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{r'api_key': apiKey};
+    final _data = <String, dynamic>{};
+    final _result = await _dio.request<Map<String, dynamic>>(
+        'person/$personId/movie_credits',
+        queryParameters: queryParameters,
+        options: RequestOptions(
+            method: 'GET',
+            headers: <String, dynamic>{},
+            extra: _extra,
+            baseUrl: baseUrl),
+        data: _data);
+    final value = MoviesByCastModel.fromJson(_result.data);
+    return value;
+  }
+
+  @override
+  Future<SearchModel> getMovieByGenre(pageId, apiKey, genreId) async {
     ArgumentError.checkNotNull(pageId, 'pageId');
     ArgumentError.checkNotNull(apiKey, 'apiKey');
     ArgumentError.checkNotNull(genreId, 'genreId');
@@ -59,7 +103,7 @@ class _ApiService implements ApiService {
             extra: _extra,
             baseUrl: baseUrl),
         data: _data);
-    final value = MoviesModel.fromJson(_result.data);
+    final value = SearchModel.fromJson(_result.data);
     return value;
   }
 

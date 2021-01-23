@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:movie_app/network/api_service.dart';
+import 'package:movie_app/network/models/bloc/cast_by_movie/cast_by_movie_bloc.dart';
 import 'package:movie_app/network/models/bloc/casts/cast_bloc.dart';
 import 'package:movie_app/network/models/bloc/genres/genres_bloc.dart';
 import 'package:movie_app/network/models/bloc/movie_detail/movie_detail_bloc.dart';
 import 'package:movie_app/network/models/bloc/movie_detail_casts/movie_detail_casts_bloc.dart';
 import 'package:movie_app/network/models/bloc/movies/movies_bloc.dart';
 import 'package:movie_app/network/models/bloc/reviews/reviews_bloc.dart';
+import 'package:movie_app/network/models/bloc/search/search_bloc.dart';
 import 'package:movie_app/network/models/bloc/simliar_movies/similar_movies_bloc.dart';
 import 'package:movie_app/network/models/bloc/videos/videos_bloc.dart';
 import 'package:movie_app/ui/MyHomePage.dart';
@@ -43,6 +45,10 @@ class MyApp extends StatelessWidget {
                   create: (context) => ReviewsBloc(api: apiService)),
               BlocProvider<GenresBloc>(
                   create: (context) => GenresBloc(api: apiService)),
+              BlocProvider<SearchBloc>(
+                  create: (context) => SearchBloc(api: apiService)),
+              BlocProvider<CastByMovieBloc>(
+                  create: (context) => CastByMovieBloc(api: apiService)),
             ],
             child: MaterialApp(
               title: 'Flutter Demo',

@@ -7,7 +7,6 @@ import 'package:movie_app/network/models/bloc/movie_detail/movie_detail_bloc.dar
 import 'package:movie_app/network/models/bloc/movie_detail_casts/movie_detail_casts_bloc.dart';
 import 'package:movie_app/network/models/bloc/reviews/reviews_bloc.dart';
 import 'package:movie_app/network/models/bloc/videos/videos_bloc.dart';
-import 'package:movie_app/ui/MyHomePage.dart';
 import 'package:movie_app/ui/components/InfoBar.dart';
 import 'package:movie_app/ui/components/MovieDetailHeading.dart';
 import 'package:movie_app/ui/components/Rating.dart';

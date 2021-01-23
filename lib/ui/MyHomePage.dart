@@ -209,10 +209,13 @@ class _MyHomePageState extends State<MyHomePage> {
                 child: CastListPage(),
               ),
               Container(
-                color: Colors.blue,
-              ),
-              Container(
-                color: Colors.blue,
+                color: Colors.black,
+                child: Center(
+                  child: Text(
+                    "Soon",
+                    style: TextStyle(color: Colors.yellow),
+                  ),
+                ),
               ),
             ],
           ),

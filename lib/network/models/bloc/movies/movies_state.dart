@@ -16,11 +16,11 @@ class MoviesLoadedState extends MoviesState {
   final MoviesModel movies;
   final MoviesModel upComingMovies;
   final MoviesModel popularMovies;
-  MoviesLoadedState(
-      {@required this.movies,
-      @required this.upComingMovies,
-      @required this.popularMovies})
-      : assert(movies != null);
+  MoviesLoadedState({
+    this.movies,
+    this.upComingMovies,
+    this.popularMovies,
+  });
 }
 
 class MoviesErrorState extends MoviesState {}

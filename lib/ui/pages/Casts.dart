@@ -45,7 +45,7 @@ class _CastListPageState extends State<CastListPage> {
             header: WaterDropHeader(),
             controller: _refreshController,
             onRefresh: () async {
-              castBloc..add(FetchCastEvent());
+              castBloc..add(FetchCastEvent(pageId: 1));
               _refreshController.loadComplete();
             },
             child: GridView.builder(
